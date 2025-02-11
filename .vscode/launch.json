@@ -1,0 +1,44 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    // {
+    //   "name": "extractmergin",
+    //   "type": "debugpy",
+    //   "request": "launch",
+    //   "python": "C:/local/python3/python.exe",
+    //   "program": "extractmergin.py",
+    //   "console": "integratedTerminal"
+    //   // "args": ["${command:pickArgs}"]
+    // },
+    // {
+    //   "name": "resizeimage",
+    //   "type": "debugpy",
+    //   "request": "launch",
+    //   "python": "C:/local/python3/python.exe",
+    //   "program": "resizeimage.py",
+    //   "console": "integratedTerminal"
+    //   // "args": ["${command:pickArgs}"]
+    // },
+    {
+      "name": "images2pdf",
+      "type": "debugpy",
+      "request": "launch",
+      "python": "C:/local/python3/python.exe",
+      "program": "images2pdf.py",
+      "console": "integratedTerminal"
+      // "args": ["${command:pickArgs}"]
+    },
+    {
+      "name": "cropside",
+      "type": "debugpy",
+      "request": "launch",
+      "python": "C:/local/python3/python.exe",
+      "program": "cropside.py",
+      "console": "integratedTerminal"
+      // "args": ["${command:pickArgs}"]
+    }
+  ]
+}
