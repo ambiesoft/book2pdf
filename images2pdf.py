@@ -31,6 +31,6 @@ def images_to_pdf(folder_path: str, output_pdf_name: str = "output.pdf"):
 
 
 # 使用例
-folder_path = "K:/T/bookmanager/cropped_images"
-# folder_path = "C:/Desktop/aaa/resized_images"
+folder_path = "./cropped_images"
+# folder_path = "C:/T/resized_images"
 images_to_pdf(folder_path, "merged_output.pdf")
