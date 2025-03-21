@@ -1,4 +1,4 @@
-import cv2 #pip install opencv-python
+import cv2  # pip install opencv-python
 import os
 
 
@@ -59,5 +59,9 @@ def crop_images_in_folder(folder_path: str, top_percentage: float = 10, bottom_p
 # folder_path = "path_to_your_image_folder"
 folder_path = "C:/T/bookimage"
 
-crop_images_in_folder(folder_path, top_percentage=7, bottom_percentage=6,
-                      left_percentage=9, right_percentage=14, output_folder="cropped_images")
+top = 20
+bottom = 15
+left = 10
+right = 11
+crop_images_in_folder(folder_path, top_percentage=top, bottom_percentage=bottom,
+                      left_percentage=left, right_percentage=right, output_folder="cropped_images")
