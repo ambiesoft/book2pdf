@@ -54,14 +54,95 @@ def crop_images_in_folder(folder_path: str, top_percentage: float = 10, bottom_p
 
     print("すべての画像処理が完了しました。")
 
+import tkinter as tk
+from tkinter import filedialog, messagebox
+import json
+import os
 
-# 使用例
-# folder_path = "path_to_your_image_folder"
-folder_path = "C:/T/bookimage"
+def show_folder_and_numbers_dialog():
+    """フォルダ選択＋top,bottom,left,rightの整数を入力するダイアログ。
+    OKなら dict を返し、キャンセルなら None を返す。
+    前回の値はスクリプトと同じディレクトリに保存・復元する。
+    """
+    # --- 保存ファイルのパス ---
+    save_path = os.path.join(os.path.dirname(__file__), "cropside.json")
 
-top = 20
-bottom = 15
-left = 10
-right = 11
-crop_images_in_folder(folder_path, top_percentage=top, bottom_percentage=bottom,
-                      left_percentage=left, right_percentage=right, output_folder="cropped_images")
+    # --- 前回の値を読み込み ---
+    defaults = {"folder": "", "top": 0, "bottom": 0, "left": 0, "right": 0}
+    if os.path.exists(save_path):
+        try:
+            with open(save_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            defaults.update({k: data.get(k, v) for k, v in defaults.items()})
+        except Exception as e:
+            print("設定ファイルの読み込みに失敗:", e)
+
+    result = {}
+
+    # --- フォルダ選択 ---
+    def select_folder():
+        folder = filedialog.askdirectory(initialdir=defaults["folder"] or os.getcwd())
+        if folder:
+            folder_var.set(folder)
+
+    # --- OKボタン処理 ---
+    def ok():
+        try:
+            numbers = {k: int(v.get()) for k, v in entries.items()}
+        except ValueError:
+            messagebox.showerror("エラー", "整数を入力してください。")
+            return
+
+        result.update({"folder": folder_var.get(), **numbers})
+
+        # 保存
+        try:
+            with open(save_path, "w", encoding="utf-8") as f:
+                json.dump(result, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            messagebox.showwarning("警告", f"設定の保存に失敗しました: {e}")
+
+        root.destroy()
+
+    def cancel():
+        root.destroy()
+
+    # --- GUI構築 ---
+    root = tk.Tk()
+    root.title("フォルダと整数入力")
+    root.resizable(False, False)
+
+    tk.Label(root, text="フォルダ:").grid(row=0, column=0, sticky="w", padx=5, pady=5)
+    folder_var = tk.StringVar(value=defaults["folder"])
+    tk.Entry(root, textvariable=folder_var, width=40).grid(row=0, column=1, padx=5)
+    tk.Button(root, text="参照", command=select_folder).grid(row=0, column=2, padx=5)
+
+    entries = {}
+    for i, name in enumerate(["top", "bottom", "left", "right"], start=1):
+        tk.Label(root, text=f"{name}:").grid(row=i, column=0, sticky="w", padx=5)
+        var = tk.StringVar(value=str(defaults[name]))
+        tk.Entry(root, textvariable=var, width=10).grid(row=i, column=1, sticky="w", padx=5, pady=2)
+        entries[name] = var
+
+    btn_frame = tk.Frame(root)
+    btn_frame.grid(row=5, column=0, columnspan=3, pady=10)
+    tk.Button(btn_frame, text="OK", width=10, command=ok).pack(side="left", padx=5)
+    tk.Button(btn_frame, text="キャンセル", width=10, command=cancel).pack(side="left", padx=5)
+
+    root.mainloop()
+    return result if result else None
+
+
+if __name__ == "__main__":
+    res = show_folder_and_numbers_dialog()
+    if res:
+        print("結果:", res)
+    else:
+        print("キャンセルされました")
+
+    crop_images_in_folder(res['folder'],
+                            top_percentage=res['top'],
+                            bottom_percentage=res['bottom'],
+                            left_percentage=res['left'],
+                            right_percentage=res['right'],
+                            output_folder="cropped_images")
