@@ -1,6 +1,8 @@
 # pip install pillow
 from PIL import Image
 import os
+import tkinter as tk
+from tkinter import filedialog
 
 
 def images_to_pdf(folder_path: str, output_pdf_name: str = "output.pdf"):
@@ -31,7 +33,22 @@ def images_to_pdf(folder_path: str, output_pdf_name: str = "output.pdf"):
     print(f"PDF変換完了: {output_pdf_path}")
 
 
-# 使用例
-folder_path = "./cropped_images"
-# folder_path = "C:/T/resized_images"
-images_to_pdf(folder_path, "merged_output.pdf")
+def main():
+    # フォルダ選択ダイアログを表示して処理対象フォルダを取得
+    def select_folder_dialog(initial_dir: str = os.getcwd(), title: str = "PDFに結合する画像のフォルダを選択") -> str | None:
+        root = tk.Tk()
+        root.withdraw()  # メインウィンドウを表示しない
+        folder = filedialog.askdirectory(initialdir=initial_dir, title=title)
+        root.destroy()
+        return folder if folder else None
+
+    folder_path = select_folder_dialog()
+    if not folder_path:
+        print("フォルダが選択されませんでした。処理を終了します。")
+        return
+
+    images_to_pdf(folder_path, "merged_output.pdf")
+
+
+if __name__ == "__main__":
+    main()
